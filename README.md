@@ -46,11 +46,18 @@ If `../../site` exists, Playwright starts a local `python3 -m http.server 4173` 
 ```bash
 SITE_ROOT=/path/to/site npm test
 BASE_URL=https://kovalenkomykhailo.github.io npm test
-npm run test:green    # skip @planted spec-gap tests
+npm run test:smoke         # @smoke only
+npm run test:regression    # everything except @planted
+npm run test:planted
+npm run test:api
+npm run test:viewport      # Pixel 5 viewport — not a real device
+npm run test:green         # alias of test:regression
 npm run typecheck
 npx playwright show-report
 npm run allure:generate && npm run allure:open
 ```
+
+Tags in titles: `@smoke` `@planted` `@api` `@viewport`. CI **Run workflow** has the same suite list.
 
 ## Layout
 
@@ -75,6 +82,7 @@ GitHub Actions runs the full suite against the live SUT:
 - pull request into `main`
 - push / merge to `main`
 - manual **Run workflow**
+- **Run tests** on the Console Tests tab (`workflow_dispatch`, or a prefilled `[e2e] <suite>` issue)
 
 `CI=true` turns on `forbidOnly`, 2 retries, and 1 worker (shared demo data). Every run uploads Playwright HTML, Allure, and traces. Push / merge to `main` also publishes:
 

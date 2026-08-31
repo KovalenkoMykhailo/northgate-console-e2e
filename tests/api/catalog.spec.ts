@@ -2,7 +2,7 @@ import { test, expect } from '../../fixtures';
 import { uniqueIban } from '../../utils/api';
 import { callApi, loginApi, ready } from '../../utils/http';
 
-test.describe('API catalog', () => {
+test.describe('API catalog @api', () => {
   let token: string;
 
   test.beforeEach(async ({ page }) => {

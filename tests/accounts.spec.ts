@@ -8,7 +8,7 @@ test.describe('Accounts CRUD', () => {
     await consolePage.openConsole();
   });
 
-  test('create account lands on page 1 and persists after reload', async ({ accountsPage, page }) => {
+  test('create account lands on page 1 and persists after reload @smoke', async ({ accountsPage, page }) => {
     const holder = 'Playwright Client';
     const iban = uniqueIban();
 

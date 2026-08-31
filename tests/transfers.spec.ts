@@ -8,7 +8,7 @@ test.describe('Transfers', () => {
     await expect(consolePage.page.getByTestId('transfer-form')).toBeVisible();
   });
 
-  test('valid book-to-book transfer is 201 Pending', async ({ transfersPage }) => {
+  test('valid book-to-book transfer is 201 Pending @smoke', async ({ transfersPage }) => {
     const res = await transfersPage.create('acc-1', 'acc-8', '10');
     expect(res.status()).toBe(201);
     const body = await res.json();

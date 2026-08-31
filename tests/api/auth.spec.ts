@@ -2,12 +2,12 @@ import { test, expect } from '../../fixtures';
 import { callApi, loginApi, ready } from '../../utils/http';
 import { demoUser } from '../../utils/constants';
 
-test.describe('API auth', () => {
+test.describe('API auth @api', () => {
   test.beforeEach(async ({ page }) => {
     await ready(page);
   });
 
-  test('POST login 200 returns token and user', async ({ page }) => {
+  test('POST login 200 returns token and user @smoke', async ({ page }) => {
     const res = await callApi<{ token: string; user: { email: string; role: string } }>(
       page,
       'POST',
@@ -26,7 +26,7 @@ test.describe('API auth', () => {
     expect(res.body).toEqual({ error: 'Unauthorized' });
   });
 
-  test('GET /me with Bearer is 200', async ({ page }) => {
+  test('GET /me with Bearer is 200 @smoke', async ({ page }) => {
     const token = await loginApi(page);
     const res = await callApi<{ email: string; name: string; role: string }>(page, 'GET', 'me', {
       token,

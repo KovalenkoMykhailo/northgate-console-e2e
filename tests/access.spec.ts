@@ -8,7 +8,7 @@ test.describe('Access', () => {
     await expect(consolePage.page.getByTestId('invite-form')).toBeVisible();
   });
 
-  test('invite Viewer stays Viewer', async ({ accessPage }) => {
+  test('invite Viewer stays Viewer @smoke', async ({ accessPage }) => {
     const email = `qa.viewer.${Date.now()}@northgate.test`;
     const res = await accessPage.invite('QA Viewer', email, 'Viewer');
     expect(res.status()).toBe(201);

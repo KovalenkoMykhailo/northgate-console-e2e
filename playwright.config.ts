@@ -67,15 +67,15 @@ export default defineConfig({
     {
       name: 'chromium',
       dependencies: ['setup'],
-      testIgnore: /auth\.setup\.ts$|tests\/(auth|docs)\.spec\.ts$|tests\/api\/|mobile\.smoke/,
+      testIgnore: /auth\.setup\.ts$|tests\/(auth|docs)\.spec\.ts$|tests\/api\/|viewport\.smoke/,
       use: {
         ...devices['Desktop Chrome'],
         storageState: AUTH_FILE,
       },
     },
     {
-      name: 'mobile',
-      testMatch: /mobile\.smoke\.spec\.ts$/,
+      name: 'viewport',
+      testMatch: /viewport\.smoke\.spec\.ts$/,
       use: {
         ...devices['Pixel 5'],
         storageState: { cookies: [], origins: [] },

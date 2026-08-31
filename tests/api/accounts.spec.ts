@@ -14,7 +14,7 @@ type Account = {
 
 type List = { items: Account[]; total: number; page: number; pageSize: number };
 
-test.describe('API accounts', () => {
+test.describe('API accounts @api', () => {
   let token: string;
 
   test.beforeEach(async ({ page }) => {
@@ -22,7 +22,7 @@ test.describe('API accounts', () => {
     token = await loginApi(page);
   });
 
-  test('GET list default pageSize is 20', async ({ page }) => {
+  test('GET list default pageSize is 20 @smoke', async ({ page }) => {
     const res = await callApi<List>(page, 'GET', 'accounts', { token });
     expect(res.status).toBe(200);
     expect(res.body.page).toBe(1);

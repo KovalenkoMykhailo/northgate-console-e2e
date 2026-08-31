@@ -2,12 +2,14 @@ import { test, expect } from '../fixtures';
 import { shot } from '../utils/shot';
 
 test.describe('Challenge chrome / Docs', () => {
-  test('Docs and App are two separate buttons', async ({ consolePage, page }) => {
+  test('Docs and App are two separate buttons @smoke', async ({ consolePage, page }) => {
     await page.goto('/sandbox/');
     await expect(consolePage.app).toBeVisible();
     await expect(consolePage.docs).toBeVisible();
+    await expect(consolePage.tests).toBeVisible();
     await expect(consolePage.app).toHaveAttribute('aria-pressed', 'true');
     await expect(consolePage.docs).toHaveAttribute('aria-pressed', 'false');
+    await expect(consolePage.tests).toHaveAttribute('aria-pressed', 'false');
     await expect(page.getByTestId('access-app')).toBeVisible();
     await shot(page, 'app-view');
 
@@ -23,6 +25,30 @@ test.describe('Challenge chrome / Docs', () => {
     await expect(page.getByTestId('access-app')).toBeVisible();
     await expect(page.getByTestId('console-docs-page')).toBeHidden();
     await expect(consolePage.app).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  test('Tests panel links the repo and embeds the report', async ({ consolePage, page }) => {
+    await page.goto('/sandbox/');
+    await consolePage.tests.click();
+    await expect(page.getByTestId('sandbox-tests')).toBeVisible();
+    await expect(page.getByTestId('access-app')).toBeHidden();
+    await expect(consolePage.tests).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByTestId('tests-repo')).toHaveAttribute(
+      'href',
+      'https://github.com/KovalenkoMykhailo/northgate-console-e2e'
+    );
+    await expect(page.getByTestId('tests-run')).toBeVisible();
+    await expect(page.getByTestId('tests-run')).toHaveAttribute('type', 'button');
+    await expect(page.getByTestId('tests-actions')).toHaveAttribute(
+      'href',
+      'https://github.com/KovalenkoMykhailo/northgate-console-e2e/actions/workflows/e2e.yml'
+    );
+    await expect(page.getByTestId('tests-frame')).toHaveAttribute(
+      'src',
+      'https://kovalenkomykhailo.github.io/northgate-console-e2e/html/index.html'
+    );
+    await page.getByTestId('tests-suite-regression').click();
+    await expect(page.getByTestId('tests-cmd')).toHaveText('npm run test:regression');
   });
 
   test('Docs opens the Console spec', async ({ consolePage, page }) => {

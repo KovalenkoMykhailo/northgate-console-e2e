@@ -9,7 +9,7 @@ type List = { items: Account[] };
  * Same planted gaps as the UI suite, asserted on GET /accounts (no clicks).
  * Unexpected pass = someone removed a planted bug.
  */
-test.describe('API spec gaps @planted', () => {
+test.describe('API spec gaps @api @planted', () => {
   let token: string;
 
   test.beforeEach(async ({ page }) => {

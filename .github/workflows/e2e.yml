@@ -6,13 +6,24 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      suite:
+        description: Which tests to run
+        type: choice
+        options: [all, smoke, regression, planted, api]
+        default: all
+  repository_dispatch:
+    types: [run-e2e]
+  issues:
+    types: [opened]
 
 concurrency:
-  group: e2e-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: e2e-${{ github.event.pull_request.number || 'main' }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: write
+  issues: write
 
 env:
   BASE_URL: https://kovalenkomykhailo.github.io
@@ -21,9 +32,45 @@ env:
 jobs:
   test:
     name: Playwright
+    if: ${{ github.event_name != 'issues' || startsWith(github.event.issue.title, '[e2e]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
+      - name: Close public trigger issue
+        if: ${{ github.event_name == 'issues' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed',
+              state_reason: 'completed',
+            });
+
+      - name: Resolve suite
+        id: suite
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_SUITE: ${{ github.event.inputs.suite }}
+          DISPATCH_SUITE: ${{ github.event.client_payload.suite }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          if [ "$EVENT_NAME" = "push" ] || [ "$EVENT_NAME" = "pull_request" ]; then
+            echo "name=all" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          raw="$INPUT_SUITE"
+          [ -n "$DISPATCH_SUITE" ] && raw="$DISPATCH_SUITE"
+          if [ "$EVENT_NAME" = "issues" ]; then
+            raw="$(printf '%s' "$ISSUE_TITLE" | sed -E 's/^\[e2e\][[:space:]]*//I' | awk '{print tolower($1)}')"
+          fi
+          case "$raw" in
+            smoke|regression|all|planted|api) echo "name=$raw" >> "$GITHUB_OUTPUT" ;;
+            *) echo "name=smoke" >> "$GITHUB_OUTPUT" ;;
+          esac
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -61,7 +108,15 @@ jobs:
         run: npx playwright install-deps chromium
 
       - name: Run Playwright tests
-        run: npm test
+        run: |
+          case "${{ steps.suite.outputs.name }}" in
+            smoke) npm run test:smoke ;;
+            regression) npm run test:regression ;;
+            planted) npm run test:planted ;;
+            api) npm run test:api ;;
+            all) npm test ;;
+            *) npm run test:smoke ;;
+          esac
 
       - name: Previous Pages (Allure history)
         if: ${{ !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
