@@ -31,6 +31,7 @@ export class AccountsPage extends BasePage {
   readonly clear = this.page.getByTestId('account-clear');
   readonly empty = this.page.getByTestId('account-empty');
   readonly total = this.page.getByTestId('account-total');
+  readonly exportCsv = this.page.getByTestId('account-export');
   readonly prev = this.page.getByTestId('account-prev');
   readonly next = this.page.getByTestId('account-next');
   readonly sortHolder = this.page.getByTestId('sort-holder');
@@ -41,10 +42,12 @@ export class AccountsPage extends BasePage {
   readonly editBalance = this.page.getByTestId('account-edit-balance');
   readonly editSubmit = this.page.getByTestId('account-edit-submit');
   readonly editCancel = this.page.getByTestId('account-edit-cancel');
+  readonly editError = this.page.getByTestId('account-edit-error');
   readonly confirm = this.page.getByTestId('confirm-modal');
   readonly confirmOk = this.page.getByTestId('confirm-ok');
   readonly confirmCancel = this.page.getByTestId('confirm-cancel');
   readonly drawer = this.page.getByTestId('account-drawer');
+  readonly drawerClose = this.page.getByTestId('drawer-close');
 
   row(id: string): Locator {
     return this.page.locator(`[data-testid="account-row"][data-id="${id}"]`);
@@ -52,6 +55,14 @@ export class AccountsPage extends BasePage {
 
   rowByHolder(name: string): Locator {
     return this.page.getByTestId('account-row').filter({ hasText: name });
+  }
+
+  freezeButton(id: string): Locator {
+    return this.row(id).getByTestId('account-freeze');
+  }
+
+  deleteButton(id: string): Locator {
+    return this.row(id).getByTestId('account-delete');
   }
 
   async create(data: AccountInput) {

@@ -9,13 +9,14 @@ Not a job. Clone **this repo only** — you do not need the site sources to run 
 **SUT:** https://kovalenkomykhailo.github.io/sandbox/  
 **Demo login:** `ada.chen@northgate.test` / `Access123!`
 
-REST is an in-browser Service Worker. Tests use `page.waitForResponse`. Playwright `request` (Node HTTP) does not hit this API.
+REST is an in-browser Service Worker on the live Pages app. UI tests use `page.waitForResponse`. API tests call `fetch` **inside the page** (`utils/http.ts`) against that same SUT. Playwright `request` is Node HTTP — GitHub Pages has no backend, so those calls get a static 404.
 
 ## Stack
 
 - Playwright + TypeScript
 - Page objects + fixtures
-- `storageState` login
+- `storageState` login for UI
+- Separate **API** project: login via POST, then GET/POST/PUT/PATCH/DELETE with Bearer (in-page `fetch`)
 - `data-testid` locators
 - GitHub Actions CI against the live SUT
 
@@ -54,9 +55,12 @@ npm run typecheck
 | --- | --- |
 | `pages/` | POM |
 | `fixtures/` | page objects on `test` |
+| `utils/http.ts` | in-page REST client against the live/local SUT |
 | `tests/auth.setup.ts` | writes `playwright/.auth/user.json` |
-| `tests/*.spec.ts` | specs |
-| `tests/planted.spec.ts` | Console docs spec; `test.fail` while planted gaps stay |
+| `tests/*.spec.ts` | UI specs |
+| `tests/api/*.spec.ts` | API specs (no form clicks) |
+| `tests/planted.spec.ts` | UI spec-gaps; `test.fail` while planted bugs stay |
+| `tests/api/spec-gaps.spec.ts` | same gaps on GET/PATCH/POST |
 
 The SUT has planted bugs on purpose. `@planted` tests assert the spec and are expected to fail until those gaps stay. Do not “fix” the console to make them pass.
 

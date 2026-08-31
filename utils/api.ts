@@ -1,6 +1,6 @@
 import type { Page, Response } from '@playwright/test';
 
-/** In-browser REST. Do not use Playwright request — Node HTTP never hits the Service Worker. */
+/** In-browser REST. Playwright `request` (Node HTTP) never hits the Service Worker. */
 export function waitForApi(page: Page, method: string, apiPath: string): Promise<Response> {
   const want = '/sandbox/api/v1/' + apiPath.replace(/^\/+/, '').replace(/\/+$/, '');
   return page.waitForResponse((res) => {

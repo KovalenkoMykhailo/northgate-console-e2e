@@ -2,7 +2,7 @@
   "name": "northgate-console-e2e",
   "version": "1.0.0",
   "private": true,
-  "description": "Playwright + TypeScript tests for Northgate Console (in-browser REST via Service Worker)",
+  "description": "Playwright + TypeScript UI and API tests for Northgate Console",
   "scripts": {
     "test": "playwright test",
     "test:headed": "playwright test --headed",

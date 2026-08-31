@@ -44,7 +44,15 @@ export default defineConfig({
     },
     {
       name: 'guest',
-      testMatch: /auth\.spec\.ts|docs\.spec\.ts/,
+      testMatch: /tests\/(auth|docs)\.spec\.ts$/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: { cookies: [], origins: [] },
+      },
+    },
+    {
+      name: 'api',
+      testMatch: /tests\/api\/.*\.spec\.ts$/,
       use: {
         ...devices['Desktop Chrome'],
         storageState: { cookies: [], origins: [] },
@@ -53,10 +61,18 @@ export default defineConfig({
     {
       name: 'chromium',
       dependencies: ['setup'],
-      testIgnore: /auth\.setup\.ts|auth\.spec\.ts|docs\.spec\.ts/,
+      testIgnore: /auth\.setup\.ts$|tests\/(auth|docs)\.spec\.ts$|tests\/api\/|mobile\.smoke/,
       use: {
         ...devices['Desktop Chrome'],
         storageState: AUTH_FILE,
+      },
+    },
+    {
+      name: 'mobile',
+      testMatch: /mobile\.smoke\.spec\.ts$/,
+      use: {
+        ...devices['Pixel 5'],
+        storageState: { cookies: [], origins: [] },
       },
     },
   ],
