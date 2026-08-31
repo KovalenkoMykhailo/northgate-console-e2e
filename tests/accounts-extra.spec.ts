@@ -1,6 +1,7 @@
 import { test, expect } from '../fixtures';
 import { uniqueIban, waitForApi } from '../utils/api';
 import { seed } from '../utils/constants';
+import { shot } from '../utils/shot';
 import fs from 'node:fs';
 
 test.describe('Accounts extras', () => {
@@ -32,6 +33,7 @@ test.describe('Accounts extras', () => {
     await expect(accountsPage.drawer).toBeVisible();
     await expect(accountsPage.drawer).toContainText('Ada Chen');
     await expect(accountsPage.drawer).toContainText(seed.adaChenId);
+    await shot(accountsPage.page, 'account-drawer');
     await accountsPage.drawerClose.click();
     await expect(accountsPage.drawer).toHaveCount(0);
   });

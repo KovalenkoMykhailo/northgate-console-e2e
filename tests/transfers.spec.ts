@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures';
+import { shot } from '../utils/shot';
 
 test.describe('Transfers', () => {
   test.beforeEach(async ({ consolePage }) => {
@@ -14,6 +15,7 @@ test.describe('Transfers', () => {
     expect(body.status).toBe('Pending');
     expect(body.currency).toBe('EUR');
     await expect(transfersPage.table.getByTestId('transfer-row').filter({ hasText: body.ref })).toBeVisible();
+    await shot(transfersPage.page, 'transfer-pending');
   });
 
   test('different currencies are 409', async ({ transfersPage }) => {

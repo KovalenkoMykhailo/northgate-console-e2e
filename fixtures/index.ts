@@ -31,4 +31,15 @@ export const test = base.extend<AppFixtures>({
   },
 });
 
+test.afterEach(async ({ page }, testInfo) => {
+  if (testInfo.project.name === 'api' || testInfo.project.name === 'setup') return;
+  if (page.isClosed()) return;
+  try {
+    const body = await page.screenshot({ type: 'png', fullPage: true });
+    await testInfo.attach('full-page', { body, contentType: 'image/png' });
+  } catch {
+    /* page already gone */
+  }
+});
+
 export { expect } from '@playwright/test';

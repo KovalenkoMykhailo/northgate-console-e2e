@@ -19,6 +19,7 @@ REST is an in-browser Service Worker on the live Pages app. UI tests use `page.w
 - Separate **API** project: login via POST, then GET/POST/PUT/PATCH/DELETE with Bearer (in-page `fetch`)
 - `data-testid` locators
 - GitHub Actions CI against the live SUT
+- Playwright HTML + Allure reports (screenshots on UI tests)
 
 ## Run
 
@@ -47,6 +48,8 @@ SITE_ROOT=/path/to/site npm test
 BASE_URL=https://kovalenkomykhailo.github.io npm test
 npm run test:green    # skip @planted spec-gap tests
 npm run typecheck
+npx playwright show-report
+npm run allure:generate && npm run allure:open
 ```
 
 ## Layout
@@ -56,6 +59,7 @@ npm run typecheck
 | `pages/` | POM |
 | `fixtures/` | page objects on `test` |
 | `utils/http.ts` | in-page REST client against the live/local SUT |
+| `utils/shot.ts` | full-page PNG attached to HTML + Allure |
 | `tests/auth.setup.ts` | writes `playwright/.auth/user.json` |
 | `tests/*.spec.ts` | UI specs |
 | `tests/api/*.spec.ts` | API specs (no form clicks) |
@@ -72,4 +76,10 @@ GitHub Actions runs the full suite against the live SUT:
 - push / merge to `main`
 - manual **Run workflow**
 
-`CI=true` turns on `forbidOnly`, 2 retries, and 1 worker (shared demo data). Failed runs keep the HTML report and traces as artifacts. `@planted` cases stay `test.fail` — unexpected pass means a planted bug was removed.
+`CI=true` turns on `forbidOnly`, 2 retries, and 1 worker (shared demo data). Every run uploads Playwright HTML, Allure, and traces. Push / merge to `main` also publishes:
+
+https://kovalenkomykhailo.github.io/northgate-console-e2e/
+
+(`index.html` · `/html/` · `/allure/`). Enable GitHub Pages on this repo: source **gh-pages** / root. `@planted` cases stay `test.fail` — unexpected pass means a planted bug was removed.
+
+UI tests take a full-page shot at the end (`screenshot: 'on'` + `full-page` attach). Named shots sit in the key flows (login, Docs/App, drawer, dialogs). API project stays `screenshot: only-on-failure`.

@@ -1,12 +1,15 @@
 import { test, expect } from '../fixtures';
 import { demoUser } from '../utils/constants';
+import { shot } from '../utils/shot';
 
 test.describe('Auth', () => {
   test('demo user signs in and sees the console', async ({ loginPage, page }) => {
     await loginPage.open();
+    await shot(page, 'login-form');
     await loginPage.signIn();
     await expect(loginPage.session).toHaveText(demoUser.session);
     await expect(page.getByTestId('env-badge')).toHaveText('TEST');
+    await shot(page, 'console-after-login');
   });
 
   test('wrong password is 401 Unauthorized @planted', async ({ loginPage }) => {
@@ -17,6 +20,7 @@ test.describe('Auth', () => {
     await expect(loginPage.error).toBeVisible();
     await expect(loginPage.error).not.toContainText('403', { timeout: 2_000 });
     await expect(loginPage.form).toBeVisible();
+    await shot(loginPage.page, 'failed-login');
   });
 
   test('logout ends the session after reload @planted', async ({ loginPage, page }) => {

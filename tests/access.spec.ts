@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures';
+import { shot } from '../utils/shot';
 
 test.describe('Access', () => {
   test.beforeEach(async ({ consolePage }) => {
@@ -15,6 +16,7 @@ test.describe('Access', () => {
     expect(body.role).toBe('Viewer');
     expect(body.status).toBe('Invited');
     await expect(accessPage.member(email).getByTestId('member-role')).toHaveText('Viewer');
+    await shot(accessPage.page, 'access-after-invite');
   });
 
   test('missing name is 400', async ({ accessPage }) => {

@@ -9,7 +9,9 @@
     "test:ui": "playwright test --ui",
     "test:green": "playwright test --grep-invert @planted",
     "typecheck": "tsc --noEmit",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "allure:generate": "allure generate allure-results -o allure-report --clean",
+    "allure:open": "allure open allure-report"
   },
   "engines": {
     "node": ">=20"
@@ -17,6 +19,8 @@
   "devDependencies": {
     "@playwright/test": "^1.55.0",
     "@types/node": "^22.13.0",
+    "allure-commandline": "^2.43.0",
+    "allure-playwright": "^3.11.0",
     "typescript": "5.9"
   }
 }

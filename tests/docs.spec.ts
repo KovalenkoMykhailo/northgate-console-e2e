@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures';
+import { shot } from '../utils/shot';
 
 test.describe('Challenge chrome / Docs', () => {
   test('Docs and App are two separate buttons', async ({ consolePage, page }) => {
@@ -8,6 +9,7 @@ test.describe('Challenge chrome / Docs', () => {
     await expect(consolePage.app).toHaveAttribute('aria-pressed', 'true');
     await expect(consolePage.docs).toHaveAttribute('aria-pressed', 'false');
     await expect(page.getByTestId('access-app')).toBeVisible();
+    await shot(page, 'app-view');
 
     await consolePage.docs.click();
     await expect(page.getByTestId('console-docs-page')).toBeVisible();
@@ -15,6 +17,7 @@ test.describe('Challenge chrome / Docs', () => {
     await expect(consolePage.docs).toHaveAttribute('aria-pressed', 'true');
     await expect(consolePage.app).toHaveAttribute('aria-pressed', 'false');
     await expect(page.getByTestId('access-app')).toBeHidden();
+    await shot(page, 'docs-view');
 
     await consolePage.app.click();
     await expect(page.getByTestId('access-app')).toBeVisible();

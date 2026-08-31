@@ -1,5 +1,6 @@
 import { test, expect } from '../fixtures';
 import { uniqueIban } from '../utils/api';
+import { shot } from '../utils/shot';
 
 async function clickOverlay(page: import('@playwright/test').Page, testId: string): Promise<void> {
   await page.getByTestId(testId).evaluate((node) => {
@@ -21,6 +22,7 @@ test.describe('Dialogs', () => {
     await accountsPage.applyFilters();
     await accountsPage.deleteButton('acc-6').click();
     await expect(accountsPage.confirm).toBeVisible();
+    await shot(page, 'confirm-delete');
     await clickOverlay(page, 'confirm-modal');
     await expect(accountsPage.confirm).toBeHidden();
     expect(deleted).toBe(false);
@@ -77,6 +79,7 @@ test.describe('Audit and API log', () => {
     await consolePage.tabAudit.click();
     await expect(page.getByTestId('audit-table')).toBeVisible();
     await expect(page.getByTestId('audit-row').first()).toContainText('CREATE');
+    await shot(page, 'audit-after-create');
   });
 
   test('API log shows a live POST after create', async ({ accountsPage, consolePage, page }) => {

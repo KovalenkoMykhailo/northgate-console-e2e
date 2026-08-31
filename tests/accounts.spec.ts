@@ -1,6 +1,7 @@
 import { test, expect } from '../fixtures';
 import { uniqueIban } from '../utils/api';
 import { seed } from '../utils/constants';
+import { shot } from '../utils/shot';
 
 test.describe('Accounts CRUD', () => {
   test.beforeEach(async ({ consolePage }) => {
@@ -20,6 +21,7 @@ test.describe('Accounts CRUD', () => {
     });
 
     await expect(accountsPage.rowByHolder(holder)).toBeVisible();
+    await shot(page, 'account-created');
 
     await page.reload();
     await expect(accountsPage.rowByHolder(holder)).toBeVisible();
@@ -45,6 +47,7 @@ test.describe('Accounts CRUD', () => {
     await accountsPage.search.fill('Demo Viewer');
     await accountsPage.applyFilters();
     await accountsPage.openEdit('acc-7');
+    await shot(page, 'edit-modal');
     await accountsPage.editBalance.fill('150');
     const res = await accountsPage.saveEdit();
     expect(res.status()).toBe(200);
