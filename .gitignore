@@ -1,0 +1,13 @@
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/*.json
+!/playwright/.auth/.gitkeep
+.env
+.env.local
+.DS_Store
+.idea/
+.vscode/
+.cursor/

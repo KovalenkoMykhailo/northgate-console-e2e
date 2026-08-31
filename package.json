@@ -1,0 +1,22 @@
+{
+  "name": "northgate-console-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright + TypeScript tests for Northgate Console (in-browser REST via Service Worker)",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:green": "playwright test --grep-invert @planted",
+    "typecheck": "tsc --noEmit",
+    "report": "playwright show-report"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^22.13.0",
+    "typescript": "5.9"
+  }
+}
