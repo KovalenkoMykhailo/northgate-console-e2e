@@ -1,5 +1,7 @@
 # Northgate Console — Playwright E2E
 
+[![e2e](https://github.com/KovalenkoMykhailo/northgate-console-e2e/actions/workflows/e2e.yml/badge.svg?branch=main)](https://github.com/KovalenkoMykhailo/northgate-console-e2e/actions/workflows/e2e.yml)
+
 Pet project. Playwright + TypeScript tests for a fake B2B admin I built: [Northgate Console](https://kovalenkomykhailo.github.io/sandbox/).
 
 Not a job. Clone **this repo only** — you do not need the site sources to run the tests.
@@ -57,3 +59,13 @@ npm run typecheck
 | `tests/planted.spec.ts` | Console docs spec; `test.fail` while planted gaps stay |
 
 The SUT has planted bugs on purpose. `@planted` tests assert the spec and are expected to fail until those gaps stay. Do not “fix” the console to make them pass.
+
+## CI
+
+GitHub Actions runs the full suite against the live SUT:
+
+- pull request into `main`
+- push / merge to `main`
+- manual **Run workflow**
+
+`CI=true` turns on `forbidOnly`, 2 retries, and 1 worker (shared demo data). Failed runs keep the HTML report and traces as artifacts. `@planted` cases stay `test.fail` — unexpected pass means a planted bug was removed.
