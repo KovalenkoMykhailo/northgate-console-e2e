@@ -7,6 +7,8 @@ export class ConsolePage extends BasePage {
   readonly session = this.page.getByTestId('session-user');
   readonly logout = this.page.getByTestId('logout');
   readonly docs = this.page.getByTestId('sandbox-docs-btn');
+  readonly app = this.page.getByTestId('sandbox-app-btn');
+  readonly reset = this.page.getByTestId('sandbox-reset');
   readonly hint = this.page.getByTestId('hunter-hint');
   readonly hunterList = this.page.getByTestId('hunter-list');
   readonly score = this.page.getByTestId('hunter-score');
