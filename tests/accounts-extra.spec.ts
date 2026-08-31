@@ -78,9 +78,28 @@ test.describe('Accounts extras', () => {
       const path = new URL(req.url()).pathname.replace(/\/+$/, '');
       if (path.endsWith('/accounts')) posts.push(path);
     });
+    // SW POST is in-page and often finishes before Playwright's next expect.
+    await accountsPage.createSubmit.evaluate((el) => {
+      const btn = el as HTMLButtonElement;
+      (window as Window & { __ngSawBusy?: Promise<boolean> }).__ngSawBusy = new Promise((resolve) => {
+        if (btn.disabled) {
+          resolve(true);
+          return;
+        }
+        const obs = new MutationObserver(() => {
+          if (btn.disabled) {
+            obs.disconnect();
+            resolve(true);
+          }
+        });
+        obs.observe(btn, { attributes: true, attributeFilter: ['disabled'] });
+      });
+    });
     const created = waitForApi(page, 'POST', 'accounts');
     await accountsPage.createSubmit.click();
-    await expect(accountsPage.createSubmit).toBeDisabled();
+    expect(await page.evaluate(() => (window as Window & { __ngSawBusy?: Promise<boolean> }).__ngSawBusy)).toBe(
+      true
+    );
     expect((await created).status()).toBe(201);
     expect(posts.length).toBe(1);
   });
