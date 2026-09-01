@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Northgate Console — test reports</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #11140f;
+        --ink: #e8efe3;
+        --muted: #9aa894;
+        --line: #2a3126;
+        --card: #1a1f18;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font: 16px/1.5 ui-sans-serif, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      main {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 3rem 1.25rem;
+      }
+      h1 {
+        font-size: 1.35rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem;
+      }
+      p {
+        margin: 0 0 1rem;
+        color: var(--muted);
+      }
+      .row {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin: 1.25rem 0;
+      }
+      a {
+        color: var(--ink);
+        text-decoration: none;
+        border: 1px solid var(--line);
+        background: var(--card);
+        padding: 0.55rem 0.85rem;
+        border-radius: 8px;
+      }
+      a:hover {
+        border-color: #5a6b4e;
+      }
+      #meta {
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Northgate Console e2e</h1>
+      <p>Last CI reports. HTML has traces. Allure has history and attachments.</p>
+      <div class="row">
+        <a href="./html/index.html">Playwright HTML</a>
+        <a href="./allure/index.html">Allure</a>
+        <a href="https://github.com/KovalenkoMykhailo/northgate-console-e2e">Repo</a>
+      </div>
+      <p id="meta">Loading last run…</p>
+    </main>
+    <script>
+      fetch('./status.json')
+        .then((r) => r.json())
+        .then((s) => {
+          const when = s.at ? new Date(s.at).toISOString().slice(0, 16) + 'Z' : '';
+          document.getElementById('meta').textContent =
+            (s.passed ?? '?') +
+            ' passed · ' +
+            (s.failed ?? '?') +
+            ' failed · ' +
+            (s.skipped ?? '?') +
+            ' skipped' +
+            (when ? ' · ' + when : '');
+        })
+        .catch(() => {
+          document.getElementById('meta').textContent = 'status.json is not on this build yet.';
+        });
+    </script>
+  </body>
+</html>
