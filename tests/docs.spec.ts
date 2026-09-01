@@ -37,8 +37,7 @@ test.describe('Challenge chrome / Docs', () => {
       'href',
       'https://github.com/KovalenkoMykhailo/northgate-console-e2e'
     );
-    await expect(page.getByTestId('tests-run')).toBeVisible();
-    await expect(page.getByTestId('tests-run')).toHaveAttribute('type', 'button');
+    await expect(page.getByTestId('tests-run')).toHaveCount(0);
     await expect(page.getByTestId('tests-actions')).toHaveAttribute(
       'href',
       'https://github.com/KovalenkoMykhailo/northgate-console-e2e/actions/workflows/e2e.yml'
@@ -47,8 +46,13 @@ test.describe('Challenge chrome / Docs', () => {
       'src',
       'https://kovalenkomykhailo.github.io/northgate-console-e2e/html/index.html'
     );
-    await page.getByTestId('tests-suite-regression').click();
-    await expect(page.getByTestId('tests-cmd')).toHaveText('npm run test:regression');
+    await expect(page.getByTestId('tests-cmd')).toHaveText('npm test');
+    await page.getByTestId('tests-suite-smoke').click();
+    await expect(page.getByTestId('tests-cmd')).toHaveText('npm run test:smoke');
+    await expect(page.getByTestId('tests-frame')).toHaveAttribute(
+      'src',
+      'https://kovalenkomykhailo.github.io/northgate-console-e2e/html/index.html#?q=%40smoke'
+    );
   });
 
   test('Docs opens the Console spec', async ({ consolePage, page }) => {

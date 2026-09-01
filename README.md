@@ -82,9 +82,8 @@ GitHub Actions runs the full suite against the live SUT:
 - pull request into `main`
 - push / merge to `main`
 - manual **Run workflow**
-- **Run tests** on the Console Tests tab (`workflow_dispatch`, or a prefilled `[e2e] <suite>` issue)
 
-`CI=true` turns on `forbidOnly`, 2 retries, and 1 worker (shared demo data). Every run uploads Playwright HTML, Allure, and traces. Push / merge to `main` also publishes:
+`CI=true` turns on `forbidOnly`, 2 retries, and 1 worker (shared demo data). Every run uploads Playwright HTML, Allure, and traces. Push / merge to `main` publishes the report only when the suite is **all** (so a smoke job cannot overwrite it):
 
 https://kovalenkomykhailo.github.io/northgate-console-e2e/
 
