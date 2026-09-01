@@ -1,8 +1,8 @@
 import { test, expect } from '../fixtures';
 import { shot } from '../utils/shot';
 
-test.describe('Challenge chrome / Docs', () => {
-  test('Docs and App are two separate buttons @smoke', async ({ consolePage, page }) => {
+test.describe('Challenge chrome / Docs @regression', () => {
+  test('Docs and App are two separate buttons @smoke @regression', async ({ consolePage, page }) => {
     await page.goto('/sandbox/');
     await expect(consolePage.app).toBeVisible();
     await expect(consolePage.docs).toBeVisible();
@@ -27,7 +27,7 @@ test.describe('Challenge chrome / Docs', () => {
     await expect(consolePage.app).toHaveAttribute('aria-pressed', 'true');
   });
 
-  test('Tests panel links the repo and embeds the report', async ({ consolePage, page }) => {
+  test('Tests panel links the repo and embeds the report @regression', async ({ consolePage, page }) => {
     await page.goto('/sandbox/');
     await consolePage.tests.click();
     await expect(page.getByTestId('sandbox-tests')).toBeVisible();
@@ -55,7 +55,7 @@ test.describe('Challenge chrome / Docs', () => {
     );
   });
 
-  test('Docs opens the Console spec', async ({ consolePage, page }) => {
+  test('Docs opens the Console spec @regression', async ({ consolePage, page }) => {
     await page.goto('/sandbox/');
     await expect(consolePage.score).toBeVisible();
     await expect(consolePage.hint).toBeVisible();
@@ -66,7 +66,7 @@ test.describe('Challenge chrome / Docs', () => {
     await expect(page.getByRole('heading', { name: /Accounts/ })).toBeVisible();
   });
 
-  test('hint expands the planted-bug list', async ({ page }) => {
+  test('hint expands the planted-bug list @regression', async ({ page }) => {
     await page.goto('/sandbox/');
     const hint = page.getByTestId('hunter-hint');
     await expect(page.getByTestId('hunter-list')).toBeHidden();

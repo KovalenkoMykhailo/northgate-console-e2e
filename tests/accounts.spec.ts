@@ -3,12 +3,12 @@ import { uniqueIban } from '../utils/api';
 import { seed } from '../utils/constants';
 import { shot } from '../utils/shot';
 
-test.describe('Accounts CRUD', () => {
+test.describe('Accounts CRUD @regression', () => {
   test.beforeEach(async ({ consolePage }) => {
     await consolePage.openConsole();
   });
 
-  test('create account lands on page 1 and persists after reload @smoke', async ({ accountsPage, page }) => {
+  test('create account lands on page 1 and persists after reload @smoke @regression', async ({ accountsPage, page }) => {
     const holder = 'Playwright Client';
     const iban = uniqueIban();
 
@@ -27,14 +27,14 @@ test.describe('Accounts CRUD', () => {
     await expect(accountsPage.rowByHolder(holder)).toBeVisible();
   });
 
-  test('empty holder hits API 400', async ({ accountsPage }) => {
+  test('empty holder hits API 400 @regression', async ({ accountsPage }) => {
     const res = await accountsPage.create({ holder: '', iban: uniqueIban() });
     expect(res.status()).toBe(400);
     await expect(accountsPage.createError).toBeVisible();
     await expect(accountsPage.createError).toContainText('Holder and IBAN are required');
   });
 
-  test('duplicate IBAN is 409', async ({ accountsPage }) => {
+  test('duplicate IBAN is 409 @regression', async ({ accountsPage }) => {
     const res = await accountsPage.create({
       holder: 'Dup Client',
       iban: 'NG00 1000 0000 0007',
@@ -43,7 +43,7 @@ test.describe('Accounts CRUD', () => {
     await expect(accountsPage.createError).toContainText('DUPLICATE_IBAN');
   });
 
-  test('edit persists via PUT', async ({ accountsPage, page }) => {
+  test('edit persists via PUT @regression', async ({ accountsPage, page }) => {
     await accountsPage.search.fill('Demo Viewer');
     await accountsPage.applyFilters();
     await accountsPage.openEdit('acc-7');
@@ -61,7 +61,7 @@ test.describe('Accounts CRUD', () => {
     await expect(accountsPage.row('acc-7').getByTestId('account-balance')).toHaveText('150.00');
   });
 
-  test('cancel and Escape do not call PUT', async ({ accountsPage, page }) => {
+  test('cancel and Escape do not call PUT @regression', async ({ accountsPage, page }) => {
     await accountsPage.search.fill('Demo Viewer');
     await accountsPage.applyFilters();
     await accountsPage.openEdit('acc-7');
@@ -80,7 +80,7 @@ test.describe('Accounts CRUD', () => {
     expect(putCalled).toBe(false);
   });
 
-  test('delete Closed account without pending transfers', async ({ accountsPage }) => {
+  test('delete Closed account without pending transfers @regression', async ({ accountsPage }) => {
     await accountsPage.search.fill('Vendor Holdings');
     await accountsPage.applyFilters();
     const res = await accountsPage.confirmDelete(seed.closedNoPending);
@@ -88,14 +88,14 @@ test.describe('Accounts CRUD', () => {
     await expect(accountsPage.row(seed.closedNoPending)).toHaveCount(0);
   });
 
-  test('delete with pending transfer is 409', async ({ accountsPage }) => {
+  test('delete with pending transfer is 409 @regression', async ({ accountsPage }) => {
     const res = await accountsPage.confirmDelete(seed.pendingFrom);
     expect(res.status()).toBe(409);
     expect(await res.json()).toEqual({ error: 'ACCOUNT_HAS_PENDING_TRANSFERS' });
     await expect(accountsPage.row(seed.pendingFrom)).toBeVisible();
   });
 
-  test('pager moves between pages', async ({ accountsPage }) => {
+  test('pager moves between pages @regression', async ({ accountsPage }) => {
     await expect(accountsPage.prev).toBeDisabled();
     await accountsPage.next.click();
     await expect(accountsPage.total).toContainText('page 2 of');

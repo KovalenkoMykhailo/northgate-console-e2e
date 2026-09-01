@@ -2,7 +2,7 @@ import { test, expect } from '../../fixtures';
 import { uniqueIban } from '../../utils/api';
 import { callApi, loginApi, ready } from '../../utils/http';
 
-test.describe('API catalog @api', () => {
+test.describe('API catalog @api @regression', () => {
   let token: string;
 
   test.beforeEach(async ({ page }) => {
@@ -10,7 +10,7 @@ test.describe('API catalog @api', () => {
     token = await loginApi(page);
   });
 
-  test('GET /stats has KPI keys', async ({ page }) => {
+  test('GET /stats has KPI keys @regression', async ({ page }) => {
     const res = await callApi<{ open: number; frozen: number; closed: number; pending: number }>(
       page,
       'GET',
@@ -24,7 +24,7 @@ test.describe('API catalog @api', () => {
     expect(typeof res.body.open).toBe('number');
   });
 
-  test('GET /transfers returns items', async ({ page }) => {
+  test('GET /transfers returns items @regression', async ({ page }) => {
     const res = await callApi<{ items: { status: string }[]; total: number }>(
       page,
       'GET',
@@ -36,7 +36,7 @@ test.describe('API catalog @api', () => {
     expect(res.body.items.length).toBeGreaterThan(0);
   });
 
-  test('GET /transfers?status=Pending', async ({ page }) => {
+  test('GET /transfers?status=Pending @regression', async ({ page }) => {
     const res = await callApi<{ items: { status: string }[] }>(
       page,
       'GET',
@@ -47,7 +47,7 @@ test.describe('API catalog @api', () => {
     expect(res.body.items.every((row) => row.status === 'Pending')).toBe(true);
   });
 
-  test('POST transfer currency mismatch is 409', async ({ page }) => {
+  test('POST transfer currency mismatch is 409 @regression', async ({ page }) => {
     const res = await callApi(page, 'POST', 'transfers', {
       token,
       body: { from: 'acc-1', to: 'acc-2', amount: 10 },
@@ -56,7 +56,7 @@ test.describe('API catalog @api', () => {
     expect(res.body).toEqual({ error: 'CURRENCY_MISMATCH' });
   });
 
-  test('GET /members returns items', async ({ page }) => {
+  test('GET /members returns items @regression', async ({ page }) => {
     const res = await callApi<{ items: unknown[]; total: number }>(page, 'GET', 'members', {
       token,
     });
@@ -64,7 +64,7 @@ test.describe('API catalog @api', () => {
     expect(res.body.total).toBe(res.body.items.length);
   });
 
-  test('GET /audit includes CREATE after POST account', async ({ page }) => {
+  test('GET /audit includes CREATE after POST account @regression', async ({ page }) => {
     const created = await callApi<{ id: string }>(page, 'POST', 'accounts', {
       token,
       body: { holder: 'Audit API', iban: uniqueIban(), balance: 1 },

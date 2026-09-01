@@ -1,14 +1,14 @@
 import { test, expect } from '../fixtures';
 import { shot } from '../utils/shot';
 
-test.describe('Access', () => {
+test.describe('Access @regression', () => {
   test.beforeEach(async ({ consolePage }) => {
     await consolePage.openConsole();
     await consolePage.tabAccess.click();
     await expect(consolePage.page.getByTestId('invite-form')).toBeVisible();
   });
 
-  test('invite Viewer stays Viewer @smoke', async ({ accessPage }) => {
+  test('invite Viewer stays Viewer @smoke @regression', async ({ accessPage }) => {
     const email = `qa.viewer.${Date.now()}@northgate.test`;
     const res = await accessPage.invite('QA Viewer', email, 'Viewer');
     expect(res.status()).toBe(201);
@@ -19,7 +19,7 @@ test.describe('Access', () => {
     await shot(accessPage.page, 'access-after-invite');
   });
 
-  test('missing name is 400', async ({ accessPage }) => {
+  test('missing name is 400 @regression', async ({ accessPage }) => {
     const res = await accessPage.invite('', 'nobody@northgate.test', 'Member');
     expect(res.status()).toBe(400);
     expect(await res.json()).toEqual({ error: 'Name and email are required.' });

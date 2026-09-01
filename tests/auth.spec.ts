@@ -3,7 +3,7 @@ import { demoUser } from '../utils/constants';
 import { shot } from '../utils/shot';
 
 test.describe('Auth', () => {
-  test('demo user signs in and sees the console @smoke', async ({ loginPage, page }) => {
+  test('demo user signs in and sees the console @smoke @regression', async ({ loginPage, page }) => {
     await loginPage.open();
     await shot(page, 'login-form');
     await loginPage.signIn();

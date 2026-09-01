@@ -4,12 +4,12 @@ import { seed } from '../utils/constants';
 import { shot } from '../utils/shot';
 import fs from 'node:fs';
 
-test.describe('Accounts extras', () => {
+test.describe('Accounts extras @regression', () => {
   test.beforeEach(async ({ consolePage }) => {
     await consolePage.openConsole();
   });
 
-  test('clear filters returns the full first page', async ({ accountsPage }) => {
+  test('clear filters returns the full first page @regression', async ({ accountsPage }) => {
     await accountsPage.search.fill('Ada Chen');
     await accountsPage.applyFilters();
     await expect(accountsPage.row(seed.adaChenId)).toBeVisible();
@@ -21,14 +21,14 @@ test.describe('Accounts extras', () => {
     await expect(accountsPage.total).toContainText('page 1 of');
   });
 
-  test('empty filter state shows the empty copy', async ({ accountsPage }) => {
+  test('empty filter state shows the empty copy @regression', async ({ accountsPage }) => {
     await accountsPage.search.fill('zzzz-no-such-client');
     await accountsPage.applyFilters();
     await expect(accountsPage.empty).toBeVisible();
     await expect(accountsPage.empty).toHaveText('No accounts match these filters.');
   });
 
-  test('row click opens the drawer', async ({ accountsPage }) => {
+  test('row click opens the drawer @regression', async ({ accountsPage }) => {
     await accountsPage.row(seed.adaChenId).click();
     await expect(accountsPage.drawer).toBeVisible();
     await expect(accountsPage.drawer).toContainText('Ada Chen');
@@ -38,7 +38,7 @@ test.describe('Accounts extras', () => {
     await expect(accountsPage.drawer).toHaveCount(0);
   });
 
-  test('edit duplicate IBAN is 409', async ({ accountsPage }) => {
+  test('edit duplicate IBAN is 409 @regression', async ({ accountsPage }) => {
     await accountsPage.search.fill('Demo Viewer');
     await accountsPage.applyFilters();
     await accountsPage.openEdit('acc-7');
@@ -49,7 +49,7 @@ test.describe('Accounts extras', () => {
     await expect(accountsPage.editModal).toBeVisible();
   });
 
-  test('Unfreeze sends PATCH 200', async ({ accountsPage }) => {
+  test('Unfreeze sends PATCH 200 @regression', async ({ accountsPage }) => {
     await accountsPage.search.fill('Bohdan Koval');
     await accountsPage.applyFilters();
     const patch = await accountsPage.confirmFreeze(seed.bohdanId);
@@ -57,7 +57,7 @@ test.describe('Accounts extras', () => {
     expect((await patch.json()).status).toBe('Active');
   });
 
-  test('Export CSV downloads the seed file', async ({ accountsPage, page }) => {
+  test('Export CSV downloads the seed file @regression', async ({ accountsPage, page }) => {
     const downloadPromise = page.waitForEvent('download');
     await accountsPage.exportCsv.click();
     const file = await downloadPromise;
@@ -69,7 +69,7 @@ test.describe('Accounts extras', () => {
     expect(csv).toContain('Ada Chen');
   });
 
-  test('create submit disables while POST is in flight', async ({ accountsPage, page }) => {
+  test('create submit disables while POST is in flight @regression', async ({ accountsPage, page }) => {
     await accountsPage.holder.fill('Busy Client');
     await accountsPage.iban.fill(uniqueIban());
     const posts: string[] = [];

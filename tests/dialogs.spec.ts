@@ -8,12 +8,12 @@ async function clickOverlay(page: import('@playwright/test').Page, testId: strin
   });
 }
 
-test.describe('Dialogs', () => {
+test.describe('Dialogs @regression', () => {
   test.beforeEach(async ({ consolePage }) => {
     await consolePage.openConsole();
   });
 
-  test('overlay click on Confirm does not DELETE', async ({ accountsPage, page }) => {
+  test('overlay click on Confirm does not DELETE @regression', async ({ accountsPage, page }) => {
     let deleted = false;
     page.on('request', (req) => {
       if (req.method() === 'DELETE' && req.url().includes('/accounts/')) deleted = true;
@@ -29,7 +29,7 @@ test.describe('Dialogs', () => {
     await expect(accountsPage.row('acc-6')).toBeVisible();
   });
 
-  test('Escape on Confirm freeze does not PATCH and restores focus', async ({ accountsPage, page }) => {
+  test('Escape on Confirm freeze does not PATCH and restores focus @regression', async ({ accountsPage, page }) => {
     let patched = false;
     page.on('request', (req) => {
       if (req.method() === 'PATCH' && req.url().includes('/accounts/')) patched = true;
@@ -43,7 +43,7 @@ test.describe('Dialogs', () => {
     await expect(freeze).toBeFocused();
   });
 
-  test('only one dialog at a time', async ({ accountsPage }) => {
+  test('only one dialog at a time @regression', async ({ accountsPage }) => {
     await accountsPage.openEdit('acc-1');
     await expect(accountsPage.editModal).toBeVisible();
     await accountsPage.freezeButton('acc-1').evaluate((node) => (node as HTMLElement).click());
@@ -51,7 +51,7 @@ test.describe('Dialogs', () => {
     await expect(accountsPage.confirm).toBeVisible();
   });
 
-  test('overlay click on Edit does not PUT', async ({ accountsPage, page }) => {
+  test('overlay click on Edit does not PUT @regression', async ({ accountsPage, page }) => {
     await accountsPage.search.fill('Demo Viewer');
     await accountsPage.applyFilters();
     await accountsPage.openEdit('acc-7');
@@ -67,12 +67,12 @@ test.describe('Dialogs', () => {
   });
 });
 
-test.describe('Audit and API log', () => {
+test.describe('Audit and API log @regression', () => {
   test.beforeEach(async ({ consolePage }) => {
     await consolePage.openConsole();
   });
 
-  test('create account writes a CREATE audit row', async ({ accountsPage, consolePage, page }) => {
+  test('create account writes a CREATE audit row @regression', async ({ accountsPage, consolePage, page }) => {
     const holder = 'Audit UI ' + Date.now();
     const res = await accountsPage.create({ holder, iban: uniqueIban() });
     expect(res.status()).toBe(201);
@@ -82,7 +82,7 @@ test.describe('Audit and API log', () => {
     await shot(page, 'audit-after-create');
   });
 
-  test('API log shows a live POST after create', async ({ accountsPage, consolePage, page }) => {
+  test('API log shows a live POST after create @regression', async ({ accountsPage, consolePage, page }) => {
     await consolePage.tabApi.click();
     await expect(page.getByTestId('api-log')).toBeVisible();
     await consolePage.tabAccounts.click();

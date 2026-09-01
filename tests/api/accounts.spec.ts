@@ -14,7 +14,7 @@ type Account = {
 
 type List = { items: Account[]; total: number; page: number; pageSize: number };
 
-test.describe('API accounts @api', () => {
+test.describe('API accounts @api @regression', () => {
   let token: string;
 
   test.beforeEach(async ({ page }) => {
@@ -22,7 +22,7 @@ test.describe('API accounts @api', () => {
     token = await loginApi(page);
   });
 
-  test('GET list default pageSize is 20 @smoke', async ({ page }) => {
+  test('GET list default pageSize is 20 @smoke @regression', async ({ page }) => {
     const res = await callApi<List>(page, 'GET', 'accounts', { token });
     expect(res.status).toBe(200);
     expect(res.body.page).toBe(1);
@@ -31,7 +31,7 @@ test.describe('API accounts @api', () => {
     expect(res.body.items.length).toBe(res.body.total);
   });
 
-  test('GET list page=2 pageSize=5', async ({ page }) => {
+  test('GET list page=2 pageSize=5 @regression', async ({ page }) => {
     const res = await callApi<List>(page, 'GET', 'accounts?page=2&pageSize=5', { token });
     expect(res.status).toBe(200);
     expect(res.body.page).toBe(2);
@@ -40,7 +40,7 @@ test.describe('API accounts @api', () => {
     expect(res.body.items.length).toBeLessThanOrEqual(5);
   });
 
-  test('GET q=Ada Chen finds Ada', async ({ page }) => {
+  test('GET q=Ada Chen finds Ada @regression', async ({ page }) => {
     const res = await callApi<List>(page, 'GET', 'accounts?q=' + encodeURIComponent('Ada Chen'), {
       token,
     });
@@ -48,28 +48,28 @@ test.describe('API accounts @api', () => {
     expect(res.body.items.some((row) => row.id === seed.adaChenId)).toBe(true);
   });
 
-  test('GET status=Closed keeps only Closed', async ({ page }) => {
+  test('GET status=Closed keeps only Closed @regression', async ({ page }) => {
     const res = await callApi<List>(page, 'GET', 'accounts?status=Closed', { token });
     expect(res.status).toBe(200);
     expect(res.body.items.length).toBeGreaterThan(0);
     expect(res.body.items.every((row) => row.status === 'Closed')).toBe(true);
   });
 
-  test('GET status=Frozen keeps Frozen', async ({ page }) => {
+  test('GET status=Frozen keeps Frozen @regression', async ({ page }) => {
     const res = await callApi<List>(page, 'GET', 'accounts?status=Frozen', { token });
     expect(res.status).toBe(200);
     expect(res.body.items.some((row) => row.id === seed.bohdanId)).toBe(true);
     expect(res.body.items.every((row) => row.status === 'Frozen')).toBe(true);
   });
 
-  test('GET minBalance=50000 is inclusive', async ({ page }) => {
+  test('GET minBalance=50000 is inclusive @regression', async ({ page }) => {
     const res = await callApi<List>(page, 'GET', 'accounts?minBalance=50000', { token });
     expect(res.status).toBe(200);
     expect(res.body.items.every((row) => row.balance >= 50000)).toBe(true);
     expect(res.body.items.some((row) => row.id === 'acc-1')).toBe(true);
   });
 
-  test('GET /accounts/:id 200 and 404', async ({ page }) => {
+  test('GET /accounts/:id 200 and 404 @regression', async ({ page }) => {
     const ok = await callApi<Account>(page, 'GET', 'accounts/' + seed.adaChenId, { token });
     expect(ok.status).toBe(200);
     expect(ok.body.id).toBe(seed.adaChenId);
@@ -80,7 +80,7 @@ test.describe('API accounts @api', () => {
     expect(missing.body).toEqual({ error: 'Not found' });
   });
 
-  test('POST create 201 then GET by id', async ({ page }) => {
+  test('POST create 201 then GET by id @regression', async ({ page }) => {
     const iban = uniqueIban();
     const created = await callApi<Account>(page, 'POST', 'accounts', {
       token,
@@ -102,7 +102,7 @@ test.describe('API accounts @api', () => {
     expect(got.body.iban).toBe(iban);
   });
 
-  test('POST missing holder is 400', async ({ page }) => {
+  test('POST missing holder is 400 @regression', async ({ page }) => {
     const res = await callApi(page, 'POST', 'accounts', {
       token,
       body: { holder: '', iban: uniqueIban() },
@@ -111,7 +111,7 @@ test.describe('API accounts @api', () => {
     expect(res.body).toEqual({ error: 'Holder and IBAN are required.' });
   });
 
-  test('POST invalid currency is 400', async ({ page }) => {
+  test('POST invalid currency is 400 @regression', async ({ page }) => {
     const res = await callApi(page, 'POST', 'accounts', {
       token,
       body: { holder: 'Bad CCY', iban: uniqueIban(), currency: 'BTC' },
@@ -120,7 +120,7 @@ test.describe('API accounts @api', () => {
     expect(res.body).toEqual({ error: 'Invalid currency' });
   });
 
-  test('PUT duplicate IBAN is 409', async ({ page }) => {
+  test('PUT duplicate IBAN is 409 @regression', async ({ page }) => {
     const res = await callApi(page, 'PUT', 'accounts/acc-7', {
       token,
       body: {
@@ -136,12 +136,12 @@ test.describe('API accounts @api', () => {
     expect(res.body).toEqual({ error: 'DUPLICATE_IBAN' });
   });
 
-  test('DELETE unknown id is 404', async ({ page }) => {
+  test('DELETE unknown id is 404 @regression', async ({ page }) => {
     const res = await callApi(page, 'DELETE', 'accounts/acc-missing', { token });
     expect(res.status).toBe(404);
   });
 
-  test('DELETE with pending transfer is 409', async ({ page }) => {
+  test('DELETE with pending transfer is 409 @regression', async ({ page }) => {
     const res = await callApi(page, 'DELETE', 'accounts/' + seed.pendingFrom, { token });
     expect(res.status).toBe(409);
     expect(res.body).toEqual({ error: 'ACCOUNT_HAS_PENDING_TRANSFERS' });

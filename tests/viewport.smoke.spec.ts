@@ -2,8 +2,8 @@ import { test, expect } from '../fixtures';
 import { shot } from '../utils/shot';
 
 /** Responsive Chrome viewport — not a real device, not Appium. */
-test.describe('Viewport smoke @viewport', () => {
-  test('login and Docs / App / Tests fit on a phone viewport @smoke', async ({
+test.describe('Viewport smoke @viewport @regression', () => {
+  test('login and Docs / App / Tests fit on a phone viewport @smoke @regression', async ({
     page,
     consolePage,
   }) => {

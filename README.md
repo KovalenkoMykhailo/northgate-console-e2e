@@ -57,7 +57,7 @@ npx playwright show-report
 npm run allure:generate && npm run allure:open
 ```
 
-Tags in titles: `@smoke` `@planted` `@api` `@viewport`. CI **Run workflow** has the same suite list.
+Tags in titles: `@smoke` `@regression` `@planted` `@api` `@viewport`. CI **Run workflow** has the same suite list.
 
 ## Layout
 
