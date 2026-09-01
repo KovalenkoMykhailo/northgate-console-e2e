@@ -73,7 +73,21 @@ Tags in titles: `@smoke` `@regression` `@planted` `@api` `@viewport`. CI **Run w
 | `tests/planted.spec.ts` | UI spec-gaps; `test.fail` while planted bugs stay |
 | `tests/api/spec-gaps.spec.ts` | same gaps on GET/PATCH/POST |
 
-The SUT has planted bugs on purpose. `@planted` tests assert the spec and are expected to fail until those gaps stay. Do not “fix” the console to make them pass.
+The SUT has planted bugs on purpose. Do not “fix” the console to make `@planted` tests pass.
+
+## Planted (expected to fail)
+
+**20** cases tagged `@planted` (`tests/planted.spec.ts`, `tests/api/spec-gaps.spec.ts`, plus two Auth cases).
+
+They assert the **spec** (how the Console should work), not the current buggy UI/API. Each one calls `test.fail(...)`. Playwright then treats a failed assert as **expected**. That is why the HTML report can show a green tick and still an `Expected` / `Received` error inside the test — the check ran, the planted gap is still there.
+
+If a `@planted` test starts passing for real, someone removed a planted bug. That is a signal, not a win.
+
+On the Console **Tests** tab, filter **Planted** to see only these. **Regression** / **Smoke** are the ordinary green suite.
+
+```bash
+npm run test:planted
+```
 
 ## CI
 
